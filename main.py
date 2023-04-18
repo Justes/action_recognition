@@ -30,6 +30,7 @@ def main():
     resume_epoch = 0
     today = str(datetime.today().date())
     saveName = modelName + '_' + dataset + '_' + today
+    root = args.root
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Device being used:", device)
@@ -44,11 +45,11 @@ def main():
 
     batch_size = args.train_batch_size
     frame = args.frame
-    train_dataloader = DataLoader(VideoDataset(dataset=dataset, split='train', clip_len=frame), batch_size=batch_size,
+    train_dataloader = DataLoader(VideoDataset(dataset=dataset, split='train', clip_len=frame, root=root), batch_size=batch_size,
                                   shuffle=True, num_workers=args.workers)
-    val_dataloader = DataLoader(VideoDataset(dataset=dataset, split='val', clip_len=frame), batch_size=batch_size,
+    val_dataloader = DataLoader(VideoDataset(dataset=dataset, split='val', clip_len=frame, root=root), batch_size=batch_size,
                                 num_workers=args.workers)
-    test_dataloader = DataLoader(VideoDataset(dataset=dataset, split='test', clip_len=frame), batch_size=batch_size,
+    test_dataloader = DataLoader(VideoDataset(dataset=dataset, split='test', clip_len=frame, root=root), batch_size=batch_size,
                                  num_workers=args.workers)
     print("train len:", len(train_dataloader))
     print("val   len:", len(val_dataloader))
