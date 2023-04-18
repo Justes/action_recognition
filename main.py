@@ -36,8 +36,8 @@ def main():
     root = args.root
     mkdir_if_missing(save_dir + "/models")
 
-    log_name = today + "_log_test.txt" if args.evaluate else today + "_log_train.txt"
-    sys.stdout = Logger(osp.join(args.save_dir, log_name))
+    log_name = "_log_test.txt" if args.evaluate else "_log_train.txt"
+    sys.stdout = Logger(osp.join(save_dir, saveName + log_name))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Device being used:", device)
