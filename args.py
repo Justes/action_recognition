@@ -113,7 +113,7 @@ def argument_parser():
     # Training hyperparameters
     # ************************************************************
     parser.add_argument(
-        "--max-epoch", default=60, type=int, help="maximum epochs to run"
+        "--max-epoch", default=100, type=int, help="maximum epochs to run"
     )
     parser.add_argument(
         "--start-epoch",

@@ -43,16 +43,24 @@ def main():
         pretrained_model=args.pretrained_model
     )
 
+    now = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    print("***********************************************")
+    print(f"Running Time: {now}")
+    print(f"==========\nArgs:{args}\n==========")
+
     train_params = [{'params': models.get_1x_lr_params(model), 'lr': lr},
                     {'params': models.get_10x_lr_params(model), 'lr': lr * 10}]
 
     batch_size = args.train_batch_size
     frame = args.frame
-    train_dataloader = DataLoader(VideoDataset(dataset=dataset, split='train', clip_len=frame, root=root), batch_size=batch_size,
+    train_dataloader = DataLoader(VideoDataset(dataset=dataset, split='train', clip_len=frame, root=root),
+                                  batch_size=batch_size,
                                   shuffle=True, num_workers=args.workers)
-    val_dataloader = DataLoader(VideoDataset(dataset=dataset, split='val', clip_len=frame, root=root), batch_size=batch_size,
+    val_dataloader = DataLoader(VideoDataset(dataset=dataset, split='val', clip_len=frame, root=root),
+                                batch_size=batch_size,
                                 num_workers=args.workers)
-    test_dataloader = DataLoader(VideoDataset(dataset=dataset, split='test', clip_len=frame, root=root), batch_size=batch_size,
+    test_dataloader = DataLoader(VideoDataset(dataset=dataset, split='test', clip_len=frame, root=root),
+                                 batch_size=batch_size,
                                  num_workers=args.workers)
     print("train len:", len(train_dataloader))
     print("val   len:", len(val_dataloader))
@@ -67,14 +75,15 @@ def main():
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=args.stepsize,
                                           gamma=args.gamma)  # the scheduler divides the lr by 10 every 10 epochs
 
-    if resume_epoch == 0:
+    if args.resume == '':
         print("Training {} from scratch...".format(modelName))
     else:
         checkpoint = torch.load(
-            os.path.join(save_dir, 'models', saveName + '_' + str(resume_epoch - 1) + '.pth.tar'),
+            args.resume,
             map_location=lambda storage, loc: storage)  # Load all tensors onto the CPU
         print("Initializing weights from: {}...".format(
-            os.path.join(save_dir, 'models', saveName + '_' + str(resume_epoch - 1) + '.pth.tar')))
+            args.resume))
+        print("resume epoch: ", checkpoint['epoch'])
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['opt_dict'])
 
@@ -104,7 +113,7 @@ def main():
             else:
                 model.eval()
 
-            for inputs, labels in tqdm(trainval_loaders[phase]):
+            for inputs, labels in trainval_loaders[phase]:
                 # move inputs and labels to the device the training is taking place on
                 inputs = Variable(inputs, requires_grad=True).to(device)
                 labels = Variable(labels).to(device)
@@ -134,11 +143,11 @@ def main():
             epoch_acc = running_corrects.double() / trainval_sizes[phase]
 
             if phase == 'train':
-                writer.add_scalar('data/train_loss_epoch', epoch_loss, epoch)
-                writer.add_scalar('data/train_acc_epoch', epoch_acc, epoch)
+                writer.add_scalar('data/train_loss_epoch', epoch_loss, epoch + 1)
+                writer.add_scalar('data/train_acc_epoch', epoch_acc, epoch + 1)
             else:
-                writer.add_scalar('data/val_loss_epoch', epoch_loss, epoch)
-                writer.add_scalar('data/val_acc_epoch', epoch_acc, epoch)
+                writer.add_scalar('data/val_loss_epoch', epoch_loss, epoch + 1)
+                writer.add_scalar('data/val_acc_epoch', epoch_acc, epoch + 1)
 
             print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()
@@ -149,9 +158,9 @@ def main():
                 'epoch': epoch + 1,
                 'state_dict': model.state_dict(),
                 'opt_dict': optimizer.state_dict(),
-            }, os.path.join(save_dir, 'models', saveName + '_' + str(epoch) + '.pth.tar'))
+            }, os.path.join(save_dir, 'models', saveName + '_' + str(epoch + 1) + '.pth.tar'))
             print("Save model at {}\n".format(
-                os.path.join(save_dir, 'models', saveName + '_' + str(epoch) + '.pth.tar')))
+                os.path.join(save_dir, 'models', saveName + '_' + str(epoch + 1) + '.pth.tar')))
 
         if args.evaluate or (epoch + 1) % args.eval_freq == 0:
             model.eval()
@@ -160,7 +169,7 @@ def main():
             running_loss = 0.0
             running_corrects = 0.0
 
-            for inputs, labels in tqdm(test_dataloader):
+            for inputs, labels in test_dataloader:
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
@@ -176,12 +185,12 @@ def main():
             epoch_loss = running_loss / test_size
             epoch_acc = running_corrects.double() / test_size
 
-            writer.add_scalar('data/test_loss_epoch', epoch_loss, epoch)
-            writer.add_scalar('data/test_acc_epoch', epoch_acc, epoch)
+            writer.add_scalar('data/test_loss_epoch', epoch_loss, epoch + 1)
+            writer.add_scalar('data/test_acc_epoch', epoch_acc, epoch + 1)
 
-            print("[test] Epoch: {}/{} Loss: {} Acc: {}".format(epoch + 1, epochs, epoch_loss, epoch_acc))
+            print("[test] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()
-            print("Execution time: " + str(stop_time - start_time) + "\n")
+            print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 
     writer.close()
 
