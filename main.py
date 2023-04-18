@@ -5,6 +5,8 @@ import os
 import glob
 from tqdm import tqdm
 import torch
+import sys
+import os.path as osp
 from tensorboardX import SummaryWriter
 from torch import nn, optim
 from torch.utils.data import DataLoader
@@ -15,6 +17,7 @@ from dataloaders.data_cfg import ds_cfg
 import models
 from utils.generaltools import set_random_seed
 from utils.iotools import mkdir_if_missing
+from utils.loggers import Logger
 
 parser = argument_parser()
 args = parser.parse_args()
@@ -28,11 +31,13 @@ def main():
     modelName = args.arch
     lr = args.lr
     save_dir = args.save_dir + '/' + dataset
-    resume_epoch = 0
     today = str(datetime.today().date())
     saveName = modelName + '_' + dataset + '_' + today
     root = args.root
     mkdir_if_missing(save_dir + "/models")
+
+    log_name = today + "_log_test.txt" if args.evaluate else today + "_log_train.txt"
+    sys.stdout = Logger(osp.join(args.save_dir, log_name))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Device being used:", device)
@@ -80,7 +85,7 @@ def main():
     else:
         checkpoint = torch.load(
             args.resume,
-            map_location=lambda storage, loc: storage)  # Load all tensors onto the CPU
+            map_location=torch.device(device))  # Load all tensors onto the CPU
         print("Initializing weights from: {}...".format(
             args.resume))
         print("resume epoch: ", checkpoint['epoch'])
@@ -153,7 +158,7 @@ def main():
             stop_time = timeit.default_timer()
             print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 
-        if (epoch + 1) % args.eval_freq == 0:
+        if (epoch + 1) % args.eval_freq == 0 or (epoch + 1) == epochs:
             torch.save({
                 'epoch': epoch + 1,
                 'state_dict': model.state_dict(),
