@@ -47,6 +47,7 @@ def main():
         num_classes=ds_cfg[dataset]['num_classes'],
         pretrained_model=args.pretrained_model
     )
+    model.to(device)
 
     now = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     print("***********************************************")
@@ -85,7 +86,7 @@ def main():
     else:
         checkpoint = torch.load(
             args.resume,
-            map_location=torch.device(device))  # Load all tensors onto the CPU
+            map_location=device)  # Load all tensors onto the CPU
         print("Initializing weights from: {}...".format(
             args.resume))
         print("resume epoch: ", checkpoint['epoch'])
@@ -93,7 +94,7 @@ def main():
         optimizer.load_state_dict(checkpoint['opt_dict'])
 
     print('Total params: %.2fM' % (sum(p.numel() for p in model.parameters()) / 1000000.0))
-    model.to(device)
+
     criterion.to(device)
 
     log_dir = os.path.join(save_dir, 'summary', today)
