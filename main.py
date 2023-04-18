@@ -37,7 +37,8 @@ def main():
 
     model = models.init_model(
         name=args.arch,
-        num_classes=ds_cfg[dataset]['num_classes']
+        num_classes=ds_cfg[dataset]['num_classes'],
+        pretrained_model=args.pretrained_model
     )
 
     train_params = [{'params': models.get_1x_lr_params(model), 'lr': lr},
