@@ -142,7 +142,7 @@ def main():
             stop_time = timeit.default_timer()
             print("Execution time: " + str(stop_time - start_time) + "\n")
 
-        if epoch % args.eval_freq == (args.eval_freq - 1):
+        if (epoch + 1) % args.eval_freq == 0:
             torch.save({
                 'epoch': epoch + 1,
                 'state_dict': model.state_dict(),
@@ -151,7 +151,7 @@ def main():
             print("Save model at {}\n".format(
                 os.path.join(save_dir, 'models', saveName + '_' + str(epoch) + '.pth.tar')))
 
-        if args.evaluate or epoch % args.eval_freq == (args.eval_freq - 1):
+        if args.evaluate or (epoch + 1) % args.eval_freq == 0:
             model.eval()
             start_time = timeit.default_timer()
 

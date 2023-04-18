@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torchsummary import summary
+# from torchsummary import summary
 
 model_urls = {
     "c3d": "../pretrained/c3d-pretrained.pth"
