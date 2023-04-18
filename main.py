@@ -14,6 +14,7 @@ from args import argument_parser
 from dataloaders.data_cfg import ds_cfg
 import models
 from utils.generaltools import set_random_seed
+from utils.iotools import mkdir_if_missing
 
 parser = argument_parser()
 args = parser.parse_args()
@@ -31,6 +32,7 @@ def main():
     today = str(datetime.today().date())
     saveName = modelName + '_' + dataset + '_' + today
     root = args.root
+    mkdir_if_missing(save_dir + "/models")
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Device being used:", device)
@@ -138,9 +140,9 @@ def main():
                 writer.add_scalar('data/val_loss_epoch', epoch_loss, epoch)
                 writer.add_scalar('data/val_acc_epoch', epoch_acc, epoch)
 
-            print("[{}] Epoch: {}/{} Loss: {} Acc: {}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc))
+            print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()
-            print("Execution time: " + str(stop_time - start_time) + "\n")
+            print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 
         if (epoch + 1) % args.eval_freq == 0:
             torch.save({
