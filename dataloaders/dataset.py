@@ -127,6 +127,8 @@ class VideoDataset(Dataset):
         # Split train/val/test sets
         for file in os.listdir(self.root_dir):
             file_path = os.path.join(self.root_dir, file)
+            if file.startswith('.'):
+                continue
             video_files = [name for name in os.listdir(file_path)]
 
             train_and_valid, test = train_test_split(video_files, test_size=0.2, random_state=42)
