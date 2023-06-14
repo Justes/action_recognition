@@ -54,8 +54,8 @@ def main():
     print(f"Running Time: {now}")
     print(f"==========\nArgs:{args}\n==========")
 
-    train_params = [{'params': models.get_1x_lr_params(model), 'lr': lr},
-                    {'params': models.get_10x_lr_params(model), 'lr': lr * 10}]
+    train_params = [{'params': model.get_1x_lr_params(model), 'lr': lr},
+                    {'params': model.get_10x_lr_params(model), 'lr': lr * 10}]
 
     batch_size = args.train_batch_size
     frame = args.frame

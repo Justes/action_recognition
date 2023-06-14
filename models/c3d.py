@@ -70,6 +70,29 @@ class C3D(nn.Module):
                 torch.nn.init.kaiming_normal_(m.weight)
 
 
+    def get_1x_lr_params(self, model):
+        """
+        This generator returns all the parameters for conv and two fc layers of the net.
+        """
+        b = [model.conv1, model.conv2, model.conv3a, model.conv3b, model.conv4a, model.conv4b,
+             model.conv5a, model.conv5b, model.fc6, model.fc7]
+        for i in range(len(b)):
+            for k in b[i].parameters():
+                if k.requires_grad:
+                    yield k
+
+
+    def get_10x_lr_params(self, model):
+        """
+        This generator returns all the parameters for the last fc layer of the net.
+        """
+        b = [model.fc8]
+        for j in range(len(b)):
+            for k in b[j].parameters():
+                if k.requires_grad:
+                    yield k
+
+
 def init_pretrained_weights(model, model_url):
     """Initialiaze network."""
     corresp_name = {
@@ -121,10 +144,12 @@ def init_pretrained_weights(model, model_url):
 
 def c3d_model(num_classes, pretrained=True, **kwargs):
     model = C3D(num_classes)
-    if pretrained and kwargs.get("pretrained_model") != "":
+    if pretrained and kwargs.get("pretrained_model") is not None:
         print(kwargs.get("pretrained_model", model_urls["c3d"]))
         init_pretrained_weights(model, kwargs.get("pretrained_model", model_urls["c3d"]))
     return model
+
+
 
 
 

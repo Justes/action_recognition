@@ -62,14 +62,14 @@ class VideoDataset(Dataset):
             if not os.path.exists('dataloaders/ucf_labels.txt'):
                 with open('dataloaders/ucf_labels.txt', 'w') as f:
                     for id, label in enumerate(sorted(self.label2index)):
-                        f.writelines(str(id+1) + ' ' + label + '\n')
-
+                        f.writelines(str(id + 1) + ' ' + label + '\n')
+            self.classes = self.read_txt_file('dataloaders/ucf_labels.txt')
         elif dataset == 'hmdb51':
             if not os.path.exists('dataloaders/hmdb_labels.txt'):
                 with open('dataloaders/hmdb_labels.txt', 'w') as f:
                     for id, label in enumerate(sorted(self.label2index)):
-                        f.writelines(str(id+1) + ' ' + label + '\n')
-
+                        f.writelines(str(id + 1) + ' ' + label + '\n')
+            self.classes = self.read_txt_file('dataloaders/hmdb_labels.txt')
 
     def __len__(self):
         return len(self.fnames)
@@ -105,7 +105,9 @@ class VideoDataset(Dataset):
                 continue
             for video in os.listdir(os.path.join(self.output_dir, 'train', video_class)):
                 video_name = os.path.join(os.path.join(self.output_dir, 'train', video_class, video),
-                                    sorted(os.listdir(os.path.join(self.output_dir, 'train', video_class, video)))[0])
+                                          sorted(
+                                              os.listdir(os.path.join(self.output_dir, 'train', video_class, video)))[
+                                              0])
                 image = cv2.imread(video_name)
                 if np.shape(image)[0] != 128 or np.shape(image)[1] != 171:
                     return False
@@ -206,7 +208,6 @@ class VideoDataset(Dataset):
 
         return buffer
 
-
     def normalize(self, buffer):
         for i, frame in enumerate(buffer):
             frame -= np.array([[[90.0, 98.0, 102.0]]])
@@ -244,12 +245,17 @@ class VideoDataset(Dataset):
 
         return buffer
 
-
-
+    def read_txt_file(self, file_path):
+        with open(file_path, 'r') as f:
+            lines = f.readlines()
+        # Remove newlines from each line and store them in a list
+        lines = [line.strip() for line in lines]
+        return lines
 
 
 if __name__ == "__main__":
     from torch.utils.data import DataLoader
+
     train_data = VideoDataset(dataset='ucf101', split='test', clip_len=8, preprocess=False)
     train_loader = DataLoader(train_data, batch_size=100, shuffle=True, num_workers=4)
 
