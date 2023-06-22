@@ -54,8 +54,11 @@ def main():
     print(f"Running Time: {now}")
     print(f"==========\nArgs:{args}\n==========")
 
-    train_params = [{'params': model.get_1x_lr_params(model), 'lr': lr},
+    if args.arch == 'c3d':
+        train_params = [{'params': model.get_1x_lr_params(model), 'lr': lr},
                     {'params': model.get_10x_lr_params(model), 'lr': lr * 10}]
+    else:
+        train_params = model.parameters()
 
     batch_size = args.train_batch_size
     frame = args.frame
@@ -158,13 +161,13 @@ def main():
             if phase == 'train':
                 writer.add_scalar('data/train_loss_epoch', epoch_loss, epoch + 1)
                 writer.add_scalar('data/train_acc_epoch', epoch_acc, epoch + 1)
-                train_loss.append(epoch_loss)
-                train_acc.append(epoch_acc)
+                train_loss.append(epoch_loss.item())
+                train_acc.append(epoch_acc.item())
             else:
                 writer.add_scalar('data/val_loss_epoch', epoch_loss, epoch + 1)
                 writer.add_scalar('data/val_acc_epoch', epoch_acc, epoch + 1)
-                val_loss.append(epoch_loss)
-                val_acc.append(epoch_acc)
+                val_loss.append(epoch_loss.item())
+                val_acc.append(epoch_acc.item())
 
             print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()
@@ -197,8 +200,8 @@ def main():
 
             writer.add_scalar('data/test_loss_epoch', epoch_loss, epoch + 1)
             writer.add_scalar('data/test_acc_epoch', epoch_acc, epoch + 1)
-            test_loss.append(epoch_loss)
-            test_acc.append(epoch_acc)
+            test_loss.append(epoch_loss.item())
+            test_acc.append(epoch_acc.item())
 
             print("[test] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()

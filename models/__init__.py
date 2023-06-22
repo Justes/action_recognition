@@ -1,10 +1,12 @@
 from .c3d import c3d_model
 from .r3d import r3d_model
+from .r2plus1d import r2plus1d_model
 
 __model_factory = {
     # image classification models
     "c3d": c3d_model,
-    "r3d": r3d_model
+    "r3d": r3d_model,
+    "r2plus1d": r2plus1d_model,
 }
 
 
