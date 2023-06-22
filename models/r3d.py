@@ -243,4 +243,4 @@ if __name__ == "__main__":
     net = R3DClassifier(101, (2, 2, 2, 2), pretrained=True)
 
     outputs = net.forward(inputs)
-    print(outputs.size())
+    # print(outputs.size())

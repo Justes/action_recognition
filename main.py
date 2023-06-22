@@ -102,6 +102,13 @@ def main():
 
     print('Training model on {} dataset...'.format(dataset))
 
+    train_acc = []
+    train_loss = []
+    val_acc = []
+    val_loss = []
+    test_acc = []
+    test_loss = []
+
     for epoch in range(args.start_epoch, epochs):
         # each epoch has a training and validation step
         for phase in ['train', 'val']:
@@ -151,24 +158,21 @@ def main():
             if phase == 'train':
                 writer.add_scalar('data/train_loss_epoch', epoch_loss, epoch + 1)
                 writer.add_scalar('data/train_acc_epoch', epoch_acc, epoch + 1)
+                train_loss.append(epoch_loss)
+                train_acc.append(epoch_acc)
             else:
                 writer.add_scalar('data/val_loss_epoch', epoch_loss, epoch + 1)
                 writer.add_scalar('data/val_acc_epoch', epoch_acc, epoch + 1)
+                val_loss.append(epoch_loss)
+                val_acc.append(epoch_acc)
 
             print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()
             print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 
-        if (epoch + 1) % args.eval_freq == 0 or (epoch + 1) == epochs:
-            torch.save({
-                'epoch': epoch + 1,
-                'state_dict': model.state_dict(),
-                'opt_dict': optimizer.state_dict(),
-            }, os.path.join(save_dir, 'models', saveName + '_' + str(epoch + 1) + '.pth.tar'))
-            print("Save model at {}\n".format(
-                os.path.join(save_dir, 'models', saveName + '_' + str(epoch + 1) + '.pth.tar')))
 
-        if args.evaluate or (epoch + 1) % args.eval_freq == 0:
+
+        if args.evaluate or (epoch + 1) == 1 or (epoch + 1) % args.eval_freq == 0:
             model.eval()
             start_time = timeit.default_timer()
 
@@ -193,10 +197,29 @@ def main():
 
             writer.add_scalar('data/test_loss_epoch', epoch_loss, epoch + 1)
             writer.add_scalar('data/test_acc_epoch', epoch_acc, epoch + 1)
+            test_loss.append(epoch_loss)
+            test_acc.append(epoch_acc)
 
             print("[test] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()
             print("Execution time: " + str(int(stop_time - start_time)) + "\n")
+
+        if (epoch + 1) % args.eval_freq == 0 or (epoch + 1) == epochs:
+            torch.save({
+                'epoch': epoch + 1,
+                'state_dict': model.state_dict(),
+                'opt_dict': optimizer.state_dict(),
+            }, os.path.join(save_dir, 'models', saveName + '_' + str(epoch + 1) + '.pth.tar'))
+            print("Save model at {}\n".format(
+                os.path.join(save_dir, 'models', saveName + '_' + str(epoch + 1) + '.pth.tar')))
+
+    print("==================================")
+    print("train acc:", train_acc)
+    print("train loss:", train_loss)
+    print("val acc:", val_acc)
+    print("val loss:", val_loss)
+    print("test acc:", test_acc)
+    print("test loss:", test_loss)
 
     writer.close()
 
