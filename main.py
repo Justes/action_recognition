@@ -162,12 +162,12 @@ def main():
                 writer.add_scalar('data/train_loss_epoch', epoch_loss, epoch + 1)
                 writer.add_scalar('data/train_acc_epoch', epoch_acc, epoch + 1)
                 train_loss.append(round(epoch_loss, 4))
-                train_acc.append(epoch_acc.item())
+                train_acc.append(round(epoch_acc.item(), 4))
             else:
                 writer.add_scalar('data/val_loss_epoch', epoch_loss, epoch + 1)
                 writer.add_scalar('data/val_acc_epoch', epoch_acc, epoch + 1)
                 val_loss.append(round(epoch_loss, 4))
-                val_acc.append(epoch_acc.item())
+                val_acc.append(round(epoch_acc.item(), 4))
 
             print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()
@@ -201,7 +201,7 @@ def main():
             writer.add_scalar('data/test_loss_epoch', epoch_loss, epoch + 1)
             writer.add_scalar('data/test_acc_epoch', epoch_acc, epoch + 1)
             test_loss.append(round(epoch_loss, 4))
-            test_acc.append(epoch_acc.item())
+            test_acc.append(round(epoch_acc.item(), 4))
 
             print("[test] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(epoch + 1, epochs, epoch_loss, epoch_acc))
             stop_time = timeit.default_timer()
