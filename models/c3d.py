@@ -144,7 +144,7 @@ def init_pretrained_weights(model, model_url):
 
 def c3d_model(num_classes, pretrained=True, **kwargs):
     model = C3D(num_classes)
-    if pretrained and kwargs.get("pretrained_model") is not None:
+    if pretrained and kwargs.get("pretrained_model") != "":
         print(kwargs.get("pretrained_model", model_urls["c3d"]))
         init_pretrained_weights(model, kwargs.get("pretrained_model", model_urls["c3d"]))
     return model

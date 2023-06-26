@@ -288,7 +288,7 @@ def init_pretrained_weights(model, model_url):
 
 def r3d_model(num_classes, pretrained=True, **kwargs):
     model = r3d_18(num_classes=num_classes)
-    if pretrained and kwargs.get("pretrained_model") is not None:
+    if pretrained and kwargs.get("pretrained_model") != "":
         init_pretrained_weights(model, kwargs.get("pretrained_model", model_urls["r3d"]))
     return model
 
