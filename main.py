@@ -56,7 +56,7 @@ def main():
 
     if args.arch == 'c3d':
         train_params = [{'params': model.get_1x_lr_params(model), 'lr': lr},
-                    {'params': model.get_10x_lr_params(model), 'lr': lr * 10}]
+                        {'params': model.get_10x_lr_params(model), 'lr': lr * 10}]
     else:
         train_params = model.parameters()
 
@@ -173,9 +173,8 @@ def main():
             stop_time = timeit.default_timer()
             print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 
-
-
-        if args.evaluate or (epoch + 1) == 1 or (epoch + 1) % args.eval_freq == 0:
+        # if args.evaluate or (epoch + 1) == 1 or (epoch + 1) % args.eval_freq == 0:
+        if args.evaluate:
             model.eval()
             start_time = timeit.default_timer()
 
