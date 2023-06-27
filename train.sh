@@ -1,8 +1,8 @@
 #!/bin/bash
 
 python main.py \
--a r3d \
+-a r2p1d_18 \
 -s hmdb51 \
 --max-epoch 1 \
---pretrained-model ../pretrained/r3d_18-b3b3357e.pth \
---save-dir logs \
+--pretrained-model ../pretrained/r2p1d18_K_200ep.pth \
+--save-dir logs
