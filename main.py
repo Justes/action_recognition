@@ -174,7 +174,7 @@ def main():
             print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 
         # if args.evaluate or (epoch + 1) == 1 or (epoch + 1) % args.eval_freq == 0:
-        if args.evaluate:
+        if True:
             model.eval()
             start_time = timeit.default_timer()
 

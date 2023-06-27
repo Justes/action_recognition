@@ -233,14 +233,6 @@ class R3DClassifier(nn.Module):
 
 
 # def init_pretrained_weights(model, model_url):
-#     #p_dict = torch.load(model_url, map_location=torch.device(device))
-#     # model_dict = model.state_dict()
-#     # for name in p_dict['state_dict']:
-#     #     print(name)
-#     #     if name not in corresp_name:
-#     #         continue
-#     #     model_dict[corresp_name[name]] = p_dict[name]
-#
 #     p_dict = torch.load(model_url)
 #     layer_name = [i for i in model.state_dict()]
 #
@@ -251,15 +243,16 @@ class R3DClassifier(nn.Module):
 #     r3d18 = r3d_18()
 #     r3d18_layer_name = [i for i in r3d18.state_dict()]
 #     for idx, (k, v) in enumerate(p_dict.items()):
-#         print(v.size())
-#         print(r3d18.state_dict()[r3d18_layer_name[idx]].shape)
-#         print(model.state_dict()[layer_name[idx]].shape)
+#         # print(v.size())
+#         # print(r3d18.state_dict()[r3d18_layer_name[idx]].shape)
+#
+#         print(layer_name[idx], model.state_dict()[layer_name[idx]].shape)
 #         if model.state_dict()[layer_name[idx]].numel() == v.numel():
 #             weights[layer_name[idx]] = v
 #     model.load_state_dict(weights)
 #     print(f"Initialized model with pretrained weights from {model_url}")
-
-
+#
+#
 # def r3d_model(num_classes, pretrained=True, **kwargs):
 #     model = R3DClassifier(num_classes, (2, 2, 2, 2), pretrained=pretrained)
 #     if pretrained and kwargs.get("pretrained_model") is not None:
@@ -282,7 +275,8 @@ def init_pretrained_weights(model, model_url):
     }
     model_dict.update(pretrain_dict)
     model.load_state_dict(model_dict)
-    # print(model.state_dict())
+    # for k, v in model.state_dict().items():
+    #     print(k, v.size())
     print(f"Initialized model with pretrained weights from {model_url}")
 
 
