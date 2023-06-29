@@ -83,6 +83,7 @@ def main():
     optimizer = optim.SGD(train_params, lr=lr, momentum=args.momentum, weight_decay=args.weight_decay)
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=args.stepsize,
                                           gamma=args.gamma)  # the scheduler divides the lr by 10 every 10 epochs
+    start_epoch = args.start_epoch
 
     if args.resume == '':
         print("Training {} from scratch...".format(modelName))
@@ -93,6 +94,7 @@ def main():
         print("Initializing weights from: {}...".format(
             args.resume))
         print("resume epoch: ", checkpoint['epoch'])
+        start_epoch = checkpoint['epoch']
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['opt_dict'])
 
@@ -112,7 +114,7 @@ def main():
     test_acc = []
     test_loss = []
 
-    for epoch in range(args.start_epoch, epochs):
+    for epoch in range(start_epoch, epochs):
         # each epoch has a training and validation step
         for phase in ['train', 'val']:
             start_time = timeit.default_timer()
