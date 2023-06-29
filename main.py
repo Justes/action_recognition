@@ -169,7 +169,8 @@ def main():
                 val_loss.append(round(epoch_loss, 4))
                 val_acc.append(round(epoch_acc.item(), 4))
 
-            print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc))
+            lr_tmp = scheduler.get_last_lr()[0]
+            print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f} Lr: {:.6f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc, lr_tmp))
             stop_time = timeit.default_timer()
             print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 

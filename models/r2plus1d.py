@@ -312,8 +312,8 @@ def init_pretrained_weights(model, model_url):
     }
     model_dict.update(pretrain_dict)
     model.load_state_dict(model_dict)
-    for k, v in model.state_dict().items():
-        print(k, v.size())
+    # for k, v in model.state_dict().items():
+    #     print(k, v.size())
 
     print(f"Initialized model with pretrained weights from {model_url}")
 
