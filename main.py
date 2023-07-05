@@ -141,21 +141,21 @@ def main():
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
 
-            scheduler.step()
+        scheduler.step()
 
-            epoch_loss = running_loss / trainval_sizes[phase]
-            epoch_acc = running_corrects.double() / trainval_sizes[phase]
+        epoch_loss = running_loss / trainval_sizes[phase]
+        epoch_acc = running_corrects.double() / trainval_sizes[phase]
 
-            if phase == 'train':
-                writer.add_scalar('data/train_loss_epoch', epoch_loss, epoch + 1)
-                writer.add_scalar('data/train_acc_epoch', epoch_acc, epoch + 1)
-                train_loss.append(round(epoch_loss, 4))
-                train_acc.append(round(epoch_acc.item(), 4))
+        if phase == 'train':
+            writer.add_scalar('data/train_loss_epoch', epoch_loss, epoch + 1)
+            writer.add_scalar('data/train_acc_epoch', epoch_acc, epoch + 1)
+            train_loss.append(round(epoch_loss, 4))
+            train_acc.append(round(epoch_acc.item(), 4))
 
-            lr_tmp = scheduler.get_last_lr()[0]
-            print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f} Lr: {:.6f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc, lr_tmp))
-            stop_time = timeit.default_timer()
-            print("Execution time: " + str(int(stop_time - start_time)) + "\n")
+        lr_tmp = scheduler.get_last_lr()[0]
+        print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f} Lr: {:.6f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc, lr_tmp))
+        stop_time = timeit.default_timer()
+        print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 
         # if args.evaluate or (epoch + 1) == 1 or (epoch + 1) % args.eval_freq == 0:
         if True:
