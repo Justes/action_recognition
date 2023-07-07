@@ -35,6 +35,9 @@ def main():
     saveName = modelName + '_' + dataset + '_' + today
     root = args.root
     mkdir_if_missing(save_dir + "/models")
+    stepsize = args.stepsize
+    if isinstance(stepsize, list):
+        stepsize = stepsize[0]
 
     log_name = "_log_test.txt" if args.evaluate else "_log_train.txt"
     sys.stdout = Logger(osp.join(save_dir, saveName + log_name))
@@ -76,7 +79,7 @@ def main():
     else:
         optimizer = optim.Adam(train_params, lr=lr, weight_decay=args.weight_decay, betas=(args.adam_beta1, args.adam_beta2))
 
-    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=args.stepsize,
+    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=stepsize,
                                           gamma=args.gamma)  # the scheduler divides the lr by 10 every 10 epochs
     start_epoch = args.start_epoch
 
