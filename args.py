@@ -123,10 +123,10 @@ def argument_parser():
     )
 
     parser.add_argument(
-        "--train-batch-size", default=20, type=int, help="training batch size"
+        "--train-batch-size", default=32, type=int, help="training batch size"
     )
     parser.add_argument(
-        "--test-batch-size", default=100, type=int, help="test batch size"
+        "--test-batch-size", default=32, type=int, help="test batch size"
     )
     parser.add_argument(
         "--dropout", default=0, type=float, help="drop out probability"

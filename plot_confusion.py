@@ -11,32 +11,40 @@ def read_txt_file(file_path):
     return lines
 
 
-m = 75
+m = 0
 n = 101
 
 file_name = 'conf_matrix.txt'
 confusion_matrix = np.loadtxt(file_name, dtype=int, delimiter=',')
 print(confusion_matrix.shape)
 confusion_matrix = confusion_matrix[m:n, m:n]
-num_classes = 26
+num_classes = 101
 class_labels = read_txt_file('dataloaders/ucf_labels.txt')
 class_labels = class_labels[m:n]
 
-plt.imshow(confusion_matrix, interpolation='nearest', cmap=plt.cm.Blues)
+proportion = []
+for i in confusion_matrix:
+    for j in i:
+        tmp = j / (np.sum(i))
+        proportion.append(tmp)
+
+proportion = np.array(proportion).reshape(num_classes, num_classes)
+
+# turbo, plasma, gnuplot
+plt.imshow(proportion, interpolation='nearest', cmap='turbo')
 plt.title('UCF101 Confusion Matrix')
 plt.colorbar()
 tick_marks = np.arange(num_classes)
-plt.xticks(tick_marks, class_labels, rotation=90)
-plt.yticks(tick_marks, class_labels)
+plt.xticks(tick_marks, class_labels, size=4, rotation=90)
+plt.yticks(tick_marks, class_labels, size=4)
 
-fmt = 'd'
-thresh = confusion_matrix.max() / 2.
+thresh = proportion.max() / 2.
 for i, j in itertools.product(range(num_classes), range(num_classes)):
     if confusion_matrix[i, j] != 0:
-        plt.text(j, i, format(int(confusion_matrix[i, j]), fmt),
+        plt.text(j, i, "",
                  horizontalalignment="center",
                  verticalalignment="center",
-                 color="white" if confusion_matrix[i, j] > thresh else "black")
+                 color="blue" if proportion[i, j] > thresh else "red")
 
 plt.tight_layout()
 plt.ylabel('True label')
