@@ -54,12 +54,7 @@ def main():
     print(f"Running Time: {now}")
     print(f"==========\nArgs:{args}\n==========")
 
-    if args.arch == 'c3d':
-        train_params = [{'params': model.get_1x_lr_params(model), 'lr': lr},
-                        {'params': model.get_10x_lr_params(model), 'lr': lr * 10}]
-    else:
-        train_params = model.parameters()
-
+    train_params = model.parameters()
     batch_size = args.train_batch_size
     frame = args.frame
     train_dataloader = DataLoader(VideoDataset(dataset=dataset, split='train', clip_len=frame, root=root),
@@ -76,7 +71,11 @@ def main():
     test_size = len(test_dataloader.dataset)
 
     criterion = nn.CrossEntropyLoss()  # standard crossentropy loss for classification
-    optimizer = optim.SGD(train_params, lr=lr, momentum=args.momentum, weight_decay=args.weight_decay)
+    if args.optim == "sgd":
+        optimizer = optim.SGD(train_params, lr=lr, momentum=args.momentum, weight_decay=args.weight_decay)
+    else:
+        optimizer = optim.Adam(train_params, lr=lr, weight_decay=args.weight_decay, betas=(args.adam_beta1, args.adam_beta2))
+
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=args.stepsize,
                                           gamma=args.gamma)  # the scheduler divides the lr by 10 every 10 epochs
     start_epoch = args.start_epoch
