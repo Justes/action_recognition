@@ -81,14 +81,14 @@ def plot_confusion_matrix(model, dataloader):
 
 
 if __name__ == "__main__":
-    dataset = 'ucf101'
-    resume = '../pretrained/c3d_ucf101_2023-04-18_30.pth.tar'
+    dataset = 'hmdb51'
+    resume = '../pretrained/c3d_hmdb51_2023-07-05_25.pth.tar'
     arch = 'c3d'
 
     workers = 2
     frame = 16
     root = '../datasets'
-    batch_size = 20
+    batch_size = 32
     set_random_seed(1)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     num_classes = ds_cfg[dataset]['num_classes']

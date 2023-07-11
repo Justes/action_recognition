@@ -44,6 +44,7 @@ def main():
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Device being used:", device)
+    print(args.optim)
 
     model = models.init_model(
         name=args.arch,
@@ -155,7 +156,7 @@ def main():
             train_acc.append(round(epoch_acc.item(), 4))
 
         lr_tmp = scheduler.get_last_lr()[0]
-        print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f} Lr: {:.6f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc, lr_tmp))
+        print("[{}] Epoch: {}/{} Loss: {:.4f} Acc: {:.4f} Lr: {:.8f}".format(phase, epoch + 1, epochs, epoch_loss, epoch_acc, lr_tmp))
         stop_time = timeit.default_timer()
         print("Execution time: " + str(int(stop_time - start_time)) + "\n")
 
@@ -201,13 +202,13 @@ def main():
             print("Save model at {}\n".format(
                 os.path.join(save_dir, 'models', saveName + '_' + str(epoch + 1) + '.pth.tar')))
 
-    print("==================================")
-    print("train acc:", train_acc)
-    print("train loss:", train_loss)
-    # print("val acc:", val_acc)
-    # print("val loss:", val_loss)
-    print("test acc:", test_acc)
-    print("test loss:", test_loss)
+            print("==================================")
+            print("train acc:", train_acc)
+            print("train loss:", train_loss)
+            # print("val acc:", val_acc)
+            # print("val loss:", val_loss)
+            print("test acc:", test_acc)
+            print("test loss:", test_loss)
 
     writer.close()
 

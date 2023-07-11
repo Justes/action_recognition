@@ -12,13 +12,13 @@ def read_txt_file(file_path):
 
 
 m = 0
-n = 101
+n = 51
 
 file_name = 'conf_matrix.txt'
 confusion_matrix = np.loadtxt(file_name, dtype=int, delimiter=',')
 print(confusion_matrix.shape)
 confusion_matrix = confusion_matrix[m:n, m:n]
-num_classes = 101
+num_classes = n
 class_labels = read_txt_file('dataloaders/ucf_labels.txt')
 class_labels = class_labels[m:n]
 
@@ -32,7 +32,7 @@ proportion = np.array(proportion).reshape(num_classes, num_classes)
 
 # turbo, plasma, gnuplot
 plt.imshow(proportion, interpolation='nearest', cmap='turbo')
-plt.title('UCF101 Confusion Matrix')
+plt.title('HMDB51 Confusion Matrix')
 plt.colorbar()
 tick_marks = np.arange(num_classes)
 plt.xticks(tick_marks, class_labels, size=4, rotation=90)
