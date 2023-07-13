@@ -209,7 +209,7 @@ def single_run():
 		find_unused_parameters = False
 
 	trainer = pl.Trainer(
-		accelerator="cpu",
+		accelerator="auto",
 		precision=16,
 		max_epochs=args.epoch,
 		callbacks=[
