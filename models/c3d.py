@@ -128,11 +128,9 @@ def init_pretrained_weights(model, model_url):
         "classifier.3.bias": "fc7.bias",
     }
 
-    #use_gpu = torch.cuda.is_available()
-    #device = 'cuda' if use_gpu else 'cpu'
-
-    #p_dict = torch.load(model_url, map_location=torch.device(device))
-    p_dict = torch.load(model_url)
+    use_gpu = torch.cuda.is_available()
+    device = 'cuda' if use_gpu else 'cpu'
+    p_dict = torch.load(model_url, map_location=torch.device(device))
     model_dict = model.state_dict()
     for name in p_dict:
         if name not in corresp_name:

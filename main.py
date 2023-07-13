@@ -44,7 +44,6 @@ def main():
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Device being used:", device)
-    print(args.optim)
 
     model = models.init_model(
         name=args.arch,

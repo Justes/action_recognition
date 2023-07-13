@@ -5,6 +5,7 @@ import torch
 import cv2
 import numpy as np
 from torch.utils.data import Dataset
+from PIL import Image
 
 
 class VideoDataset(Dataset):
@@ -28,9 +29,13 @@ class VideoDataset(Dataset):
         self.split = split
 
         # The following three parameters are chosen as described in the paper section 4.1
-        self.resize_height = 128
-        self.resize_width = 171
-        self.crop_size = 112
+        # self.resize_height = 128
+        # self.resize_width = 171
+        # self.crop_size = 112
+
+        self.resize_height = 256
+        self.resize_width = 342
+        self.crop_size = 224
 
         if not self.check_integrity():
             raise RuntimeError('Dataset not found or corrupted.' +
@@ -85,6 +90,9 @@ class VideoDataset(Dataset):
             buffer = self.randomflip(buffer)
         buffer = self.normalize(buffer)
         buffer = self.to_tensor(buffer)
+
+        # print(buffer.shape)
+
         return torch.from_numpy(buffer), torch.from_numpy(labels)
 
     def check_integrity(self):
@@ -216,14 +224,15 @@ class VideoDataset(Dataset):
         return buffer
 
     def to_tensor(self, buffer):
-        return buffer.transpose((3, 0, 1, 2))
+        # return buffer.transpose((3, 0, 1, 2))
+        return buffer.transpose((0, 3, 1, 2))
 
     def load_frames(self, file_dir):
         frames = sorted([os.path.join(file_dir, img) for img in os.listdir(file_dir)])
         frame_count = len(frames)
         buffer = np.empty((frame_count, self.resize_height, self.resize_width, 3), np.dtype('float32'))
         for i, frame_name in enumerate(frames):
-            frame = np.array(cv2.imread(frame_name)).astype(np.float64)
+            frame = np.array(cv2.resize(cv2.imread(frame_name), (self.resize_width, self.resize_height))).astype(np.float64)
             buffer[i] = frame
 
         return buffer

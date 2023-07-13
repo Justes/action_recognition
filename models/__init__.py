@@ -1,6 +1,8 @@
 from .c3d import c3d_model
 from .r3d import r3d_18_model, r3d_34_model
 from .r2plus1d import r2p1d_18_model, r2p1d_34_model
+from .vivit import vivit_model
+
 
 __model_factory = {
     # image classification models
@@ -9,6 +11,7 @@ __model_factory = {
     "r3d_34": r3d_34_model,
     "r2p1d_18": r2p1d_18_model,
     "r2p1d_34": r2p1d_34_model,
+    "vivit": vivit_model,
 }
 
 
