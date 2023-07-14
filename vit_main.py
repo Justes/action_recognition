@@ -213,11 +213,12 @@ def single_run():
 		precision=16,
 		max_epochs=args.epoch,
 		logger=False,
-		callbacks=[
-			LearningRateMonitor(logging_interval='step'),
-		],
+		# callbacks=[
+		# 	LearningRateMonitor(logging_interval='step'),
+		# ],
 		check_val_every_n_epoch=1,
-		log_every_n_steps=args.log_interval)
+		# log_every_n_steps=args.log_interval
+	)
 		
 	# To be reproducable
 	torch.random.manual_seed(args.seed)
