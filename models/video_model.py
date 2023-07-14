@@ -153,7 +153,7 @@ class VideoTransformer(pl.LightningModule):
 			if i == 1:  # only the first group is regularized
 				param_group["weight_decay"] = self._get_momentum(base_value=self.configs.weight_decay, final_value=self.configs.weight_decay_end)
 
-	def clip_gradients(self, clip_grad, norm_type=2):
+	def grad_norm(self, clip_grad, norm_type=2):
 		layer_norm = []
 		if self.configs.objective == 'supervised' and self.configs.eval_metrics == 'linear_prob':
 			model_wo_ddp = self.cls_head.module if hasattr(self.cls_head, 'module') else self.cls_head
@@ -217,13 +217,13 @@ class VideoTransformer(pl.LightningModule):
 			return {'loss': loss, 'data_time': data_time}
 	
 	def on_after_backward(self):
-		param_norms = self.clip_gradients(self.configs.clip_grad)
+		param_norms = self.grad_norm(self.configs.clip_grad)
 		self._weight_decay_update()
 		# log learning daynamic
 		lr = self.optimizers().optimizer.param_groups[0]['lr']
 		self.log("lr",lr,on_step=True,on_epoch=False,prog_bar=True)
 		self.log("grad_norm",param_norms,on_step=True,on_epoch=False,prog_bar=True)
-	
+
 	def optimizer_step(self, epoch, batch_idx, optimizer, optimizer_closure):
 		optimizer.step(closure=optimizer_closure)
 		self.data_start = time.perf_counter()
