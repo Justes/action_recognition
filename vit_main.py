@@ -212,6 +212,7 @@ def single_run():
 		accelerator="auto",
 		precision=16,
 		max_epochs=args.epoch,
+		logger=False,
 		callbacks=[
 			LearningRateMonitor(logging_interval='step'),
 		],
