@@ -298,12 +298,22 @@ def init_pretrained_weights(model, model_url):
     pretrain_dict = torch.load(model_url)
     model_dict = model.state_dict()
 
+    keys = pretrain_dict.keys()
+    if 'state_dict' in keys:
+        print("pretrained keys:", keys)
+        pretrain_dict = pretrain_dict['state_dict']
+
     # print('===================')
     # for k, v in pretrain_dict.items():
     #     if k in model_dict and model_dict[k].size() == v.size():
     #         print(k, model_dict[k].size())
     #     else:
     #         print(k, '---')
+
+    keys = pretrain_dict.keys()
+    if 'state_dict' in keys:
+        print("pretrained keys:", keys)
+        pretrain_dict = pretrain_dict['state_dict']
 
     pretrain_dict = {
         k: v

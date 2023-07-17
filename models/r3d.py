@@ -501,6 +501,18 @@ def init_pretrained_weights(model, model_url):
     """
     pretrain_dict = torch.load(model_url)
     model_dict = model.state_dict()
+    keys = pretrain_dict.keys()
+    if 'state_dict' in keys:
+        print("pretrained keys:", keys)
+        pretrain_dict = pretrain_dict['state_dict']
+
+    # for k, v in pretrain_dict.items():
+    #     print(k, v.size())
+    #
+    # print('====================\n\n\n')
+    # for k, v in model_dict.items():
+    #     print(k, v.size())
+
     pretrain_dict = {
         k: v
         for k, v in pretrain_dict.items()

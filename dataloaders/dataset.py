@@ -29,13 +29,13 @@ class VideoDataset(Dataset):
         self.split = split
 
         # The following three parameters are chosen as described in the paper section 4.1
-        # self.resize_height = 128
-        # self.resize_width = 171
-        # self.crop_size = 112
+        self.resize_height = 128
+        self.resize_width = 171
+        self.crop_size = 112
 
-        self.resize_height = 256
-        self.resize_width = 342
-        self.crop_size = 224
+        # self.resize_height = 256
+        # self.resize_width = 342
+        # self.crop_size = 224
 
         if not self.check_integrity():
             raise RuntimeError('Dataset not found or corrupted.' +
@@ -224,8 +224,8 @@ class VideoDataset(Dataset):
         return buffer
 
     def to_tensor(self, buffer):
-        # return buffer.transpose((3, 0, 1, 2))
-        return buffer.transpose((0, 3, 1, 2))
+        return buffer.transpose((3, 0, 1, 2))
+        # return buffer.transpose((0, 3, 1, 2))
 
     def load_frames(self, file_dir):
         frames = sorted([os.path.join(file_dir, img) for img in os.listdir(file_dir)])
