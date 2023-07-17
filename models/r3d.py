@@ -2,13 +2,15 @@ import torch
 import torch.nn as nn
 from torch.nn.modules.utils import _triple
 from collections import OrderedDict
-from torchvision.models.video import r3d_18
+from torchvision.models.video import r3d_18, r2plus1d_18, mc3_18
 from functools import partial
 import torch.nn.functional as F
 
 model_urls = {
     "r3d_18": "../pretrained/r3d_18-b3b3357e.pth",
-    "r3d_34": "../pretrained/r3d18_K_200ep.pth"
+    "r3d_34": "../pretrained/r3d34_K_200ep.pth",
+    "r2plus1d_18": "../pretrained/r2plus1d_18-91a641e6.pth",
+    "mcs_18": "../pretrained/mc3_18-a90a0ba3.pth",
 }
 
 
@@ -520,8 +522,6 @@ def init_pretrained_weights(model, model_url):
     }
     model_dict.update(pretrain_dict)
     model.load_state_dict(model_dict)
-    # for k, v in model.state_dict().items():
-    #     print(k, v.size())
     print(f"Initialized model with pretrained weights from {model_url}")
 
 
@@ -529,6 +529,20 @@ def r3d_18_model(num_classes, pretrained=True, **kwargs):
     model = r3d_18(num_classes=num_classes)
     if pretrained and kwargs.get("pretrained_model") != "":
         init_pretrained_weights(model, kwargs.get("pretrained_model", model_urls["r3d_18"]))
+    return model
+
+
+def r2plus1d_18_model(num_classes, pretrained=True, **kwargs):
+    model = r2plus1d_18(num_classes=num_classes)
+    if pretrained and kwargs.get("pretrained_model") != "":
+        init_pretrained_weights(model, kwargs.get("pretrained_model", model_urls["r2plus1d_18"]))
+    return model
+
+
+def mcs_18_model(num_classes, pretrained=True, **kwargs):
+    model = mc3_18(num_classes=num_classes)
+    if pretrained and kwargs.get("pretrained_model") != "":
+        init_pretrained_weights(model, kwargs.get("pretrained_model", model_urls["mcs_18"]))
     return model
 
 
