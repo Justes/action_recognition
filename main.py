@@ -57,7 +57,11 @@ def main():
     print(f"Running Time: {now}")
     print(f"==========\nArgs:{args}\n==========")
 
-    train_params = model.parameters()
+    if args.arch == 'c3d':
+        train_params = [{'params': model.get_1x_lr_params(model), 'lr': lr},
+                        {'params': model.get_10x_lr_params(model), 'lr': lr * 10}]
+    else:
+        train_params = model.parameters()
     batch_size = args.train_batch_size
     frame = args.frame
     train_dataloader = DataLoader(VideoDataset(dataset=dataset, split='train', clip_len=frame, root=root),
