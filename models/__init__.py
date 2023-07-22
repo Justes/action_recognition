@@ -1,5 +1,6 @@
 from .c3d import c3d_model
-from .r3d import r3d_18_model, r3d_34_model, r2plus1d_18_model, mcs_18_model, r2d_18_model
+from .r3d import r3d_18_model, r3d_34_model, r2plus1d_18_model, mcs_18_model, \
+    r2d_18_model, r2d_34_model, r2d_50_model
 from .r2plus1d import r2p1d_18_model, r2p1d_34_model
 from .vivit import vivit_model
 
@@ -15,6 +16,8 @@ __model_factory = {
     "r2plus1d_18": r2plus1d_18_model,
     "mcs_18": mcs_18_model,
     "r2d_18": r2d_18_model,
+    "r2d_34": r2d_34_model,
+    "r2d_50": r2d_50_model,
 }
 
 
