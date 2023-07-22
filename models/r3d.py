@@ -5,7 +5,7 @@ from collections import OrderedDict
 from torchvision.models.video import r3d_18, r2plus1d_18, mc3_18
 from functools import partial
 import torch.nn.functional as F
-from torchvision.models import resnet18
+from torchvision.models import resnet18, resnet34, resnet50
 
 model_urls = {
     "r3d_18": "../pretrained/r3d_18-b3b3357e.pth",
@@ -561,6 +561,19 @@ def r2d_18_model(num_classes, pretrained=True, **kwargs):
         init_pretrained_weights(model, kwargs.get("pretrained_model"))
     return model
 
+
+def r2d_34_model(num_classes, pretrained=True, **kwargs):
+    model = resnet34(num_classes=num_classes)
+    if pretrained and kwargs.get("pretrained_model") != "":
+        init_pretrained_weights(model, kwargs.get("pretrained_model"))
+    return model
+
+
+def r2d_50_model(num_classes, pretrained=True, **kwargs):
+    model = resnet50(num_classes=num_classes)
+    if pretrained and kwargs.get("pretrained_model") != "":
+        init_pretrained_weights(model, kwargs.get("pretrained_model"))
+    return model
 
 if __name__ == "__main__":
     inputs = torch.rand(1, 3, 16, 112, 112)
