@@ -5,8 +5,8 @@ from functools import partial
 import torch.nn.functional as F
 
 model_urls = {
-    "r2p1d_18": "../pretrained/r2p1d18_K_200ep.pth",
-    "r2p1d_34": "../pretrained/r2p1d34_K_200ep.pth"
+    "r2p1d_18": "../../pretrained/r2p1d18_K_200ep.pth",
+    "r2p1d_34": "../../pretrained/r2p1d34_K_200ep.pth"
 }
 
 
@@ -310,10 +310,6 @@ def init_pretrained_weights(model, model_url):
     #     else:
     #         print(k, '---')
 
-    keys = pretrain_dict.keys()
-    if 'state_dict' in keys:
-        print("pretrained keys:", keys)
-        pretrain_dict = pretrain_dict['state_dict']
 
     pretrain_dict = {
         k: v
@@ -344,7 +340,7 @@ def r2p1d_34_model(num_classes, pretrained=True, **kwargs):
 
 if __name__ == "__main__":
     inputs = torch.rand(1, 3, 16, 112, 112)
-    net = r2p1d_18_model(51, pretrained=False)
+    net = r2p1d_18_model(51, pretrained=True)
 
     outputs = net.forward(inputs)
     # print(outputs.size())

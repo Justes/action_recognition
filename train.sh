@@ -1,10 +1,9 @@
 #!/bin/bash
 
 python main.py \
--a r2d_18 \
+-a r2p1d_18 \
 -s hmdb51 \
---frame 1 \
 --optim sgd \
 --max-epoch 1 \
---pretrained-model ../pretrained/resnet18-f37072fd.pth \
+--pretrained-model ../pretrained/r2p1d18_K_200ep.pth \
 --save-dir logs

@@ -228,6 +228,7 @@ class VideoDataset(Dataset):
             return buffer.transpose((3, 0, 1, 2)).squeeze(1)
         else:
             return buffer.transpose((3, 0, 1, 2))
+            # return buffer.transpose((0, 3, 1, 2))
 
     def load_frames(self, file_dir):
         frames = sorted([os.path.join(file_dir, img) for img in os.listdir(file_dir)])
