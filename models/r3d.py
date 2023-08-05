@@ -509,12 +509,12 @@ def init_pretrained_weights(model, model_url):
         print("pretrained keys:", keys)
         pretrain_dict = pretrain_dict['state_dict']
 
+    # print('===================')
     # for k, v in pretrain_dict.items():
-    #     print(k, v.size())
-    #
-    # print('====================\n\n\n')
-    # for k, v in model_dict.items():
-    #     print(k, v.size())
+    #     if k in model_dict and model_dict[k].size() == v.size():
+    #         print(k, model_dict[k].size())
+    #     else:
+    #         print(k, '---')
 
     pretrain_dict = {
         k: v
